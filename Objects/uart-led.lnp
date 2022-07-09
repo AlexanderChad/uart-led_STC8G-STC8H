@@ -1,0 +1,7 @@
+".\Objects\STARTUP.obj",
+".\Objects\delay.obj",
+".\Objects\GPIO.obj",
+".\Objects\main.obj",
+".\Objects\UART.obj" 
+TO ".\Objects\uart-led" 
+PRINT(".\Listings\uart-led.m51") RAMSIZE(256) 

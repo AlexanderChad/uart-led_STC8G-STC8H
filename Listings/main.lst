@@ -1,0 +1,90 @@
+C51 COMPILER V9.01   MAIN                                                                  07/10/2022 00:58:18 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include  "config.h"
+   2          #include  "GPIO.h"
+   3          #include  "delay.h"
+   4          #include  "UART.h"
+   5          
+   6          void  GPIO_config(void)
+   7          {
+   8   1        GPIO_InitTypeDef  GPIO_InitStructure;
+   9   1        GPIO_InitStructure.Pin  = GPIO_Pin_2;   //IO
+  10   1        GPIO_InitStructure.Mode = GPIO_OUT_PP;    //GPIO_PullUp,GPIO_HighZ,GPIO_OUT_OD,GPIO_OUT_PP
+  11   1        GPIO_Inilize(GPIO_P1,&GPIO_InitStructure);
+  12   1      }
+  13          void  UART_config(void)
+  14          {
+  15   1        COMx_InitDefine   COMx_InitStructure;         //????
+  16   1        COMx_InitStructure.UART_Mode      = UART_8bit_BRTx; //??, UART_ShiftRight,UART_8bit_BRTx,UART_9bit,UART_
+             -9bit_BRTx
+  17   1        COMx_InitStructure.UART_BRT_Use   = BRT_Timer1;     //????????, BRT_Timer1, BRT_Timer2 (??: ??2????BRT_Tim
+             -er2)
+  18   1        COMx_InitStructure.UART_BaudRate  = 115200ul;     //???, ?? 110 ~ 115200
+  19   1        COMx_InitStructure.UART_RxEnable  = ENABLE;       //????,   ENABLE?DISABLE
+  20   1        COMx_InitStructure.BaudRateDouble = DISABLE;      //?????, ENABLE?DISABLE
+  21   1        COMx_InitStructure.UART_Interrupt = ENABLE;       //????,   ENABLE?DISABLE
+  22   1        COMx_InitStructure.UART_Priority    = Priority_0;     //???????(???) Priority_0,Priority_1,Priority_2,Prio
+             -rity_3
+  23   1        COMx_InitStructure.UART_P_SW      = UART1_SW_P30_P31; //????,   UART1_SW_P30_P31,UART1_SW_P36_P37,UART1_
+             -SW_P16_P17,UART1_SW_P43_P44
+  24   1        UART_Configuration(UART1, &COMx_InitStructure);   //?????1 UART1,UART2,UART3,UART4
+  25   1      
+  26   1        PrintString1("STC8H1K08 UART1 Test Program!\r\n");  //UART1???????
+  27   1      }
+  28          void main(void)
+  29          {
+  30   1        GPIO_config();
+  31   1        UART_config();
+  32   1        EA = 1;
+  33   1        P1=0;
+  34   1        while (1)
+  35   1          {
+  36   2            delay_ms(1);
+  37   2            if(COM1.RX_TimeOut > 0)
+  38   2              {
+  39   3                if(--COM1.RX_TimeOut == 0)
+  40   3                  {
+  41   4                    if(COM1.RX_Cnt > 0)
+  42   4                      {
+  43   5                        //for(i=0; i<COM1.RX_Cnt; i++){TX1_write2buff(RX1_Buffer[i]);}
+  44   5                        switch(RX1_Buffer[0])
+  45   5                          {
+  46   6                          case 'q':
+  47   6                            P1=GPIO_Pin_2;
+  48   6                            PrintString1("led ON\r\n");
+  49   6                            break;
+  50   6                          case 'w':
+C51 COMPILER V9.01   MAIN                                                                  07/10/2022 00:58:18 PAGE 2   
+
+  51   6                            P1=0;
+  52   6                            PrintString1("led OFF\r\n");
+  53   6                            break;
+  54   6                          }
+  55   5                      }
+  56   4                    COM1.RX_Cnt = 0;
+  57   4                  }
+  58   3              }
+  59   2          }
+  60   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    140    ----
+   CONSTANT SIZE    =     51    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      14
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
